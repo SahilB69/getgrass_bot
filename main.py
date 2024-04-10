@@ -1,10 +1,12 @@
 import asyncio
+import argparse
 import random
 import ssl
 import json
 import time
 import uuid
 
+from sys import stderr
 from loguru import logger
 from websockets_proxy import Proxy, proxy_connect
 from fake_useragent import UserAgent
@@ -105,4 +107,16 @@ async def main():
 
 
 if __name__ == '__main__':
+    # Logger setup
+    logger.remove(0)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', action='store_true', help='enable debug output')
+    parser.add_argument('--debug', action='store_true', help='enable debug output')
+    args = parser.parse_args()
+    if args.debug or args.d:
+        logger.add(sink=stderr, level='DEBUG')
+        logger.debug('DEBUG enabled')
+    else:
+        logger.add(sink=stderr, level='INFO')
+    
     asyncio.run(main())
