@@ -86,11 +86,15 @@ async def connect_to_wss(user_id):
 
 
 async def main():
-    # TODO 修改user_id
-    _user_id = ''
+    try:
+        with open("user_id", 'r') as file:
+            _user_id = file.readline().rstrip()
+            file.close()
+    except Exception as e:
+        logger.error(e)
+
     await connect_to_wss(_user_id)
 
 
 if __name__ == '__main__':
-    # # 运行主函数
     asyncio.run(main())

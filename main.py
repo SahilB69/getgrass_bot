@@ -89,16 +89,20 @@ async def connect_to_wss(socks5_proxy, user_id):
 
 
 async def main():
-    # TODO 修改user_id
-    _user_id = 'user_id'
-    # TODO 修改代理列表
-    socks5_proxy_list = [
-        'socks5://user:pwd@ip:port',
-    ]
+    try:
+        with open('user_id', 'r') as file:
+            _user_id = file.readline().rstrip()
+            file.close()
+        
+        with open('proxy_list', 'r') as file:
+            socks5_proxy_list = file.read().splitlines()
+            file.close()
+    except Exception as e:
+        logger.error(e)
+
     tasks = [asyncio.ensure_future(connect_to_wss(i, _user_id)) for i in socks5_proxy_list]
     await asyncio.gather(*tasks)
 
 
 if __name__ == '__main__':
-    # # 运行主函数
     asyncio.run(main())
