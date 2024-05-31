@@ -59,7 +59,7 @@ async def connect_to_wss(socks5_proxy, user_id):
                         logger.error(socks5_proxy)
 
                 await asyncio.sleep(1)
-                asyncio.create_task(send_ping())
+                task = asyncio.create_task(send_ping())
 
                 while True:
                     response = await websocket.recv()
@@ -88,6 +88,7 @@ async def connect_to_wss(socks5_proxy, user_id):
         except Exception as e:
             logger.error(e)
             logger.error(socks5_proxy)
+            task.cancel()
 
 
 async def main():

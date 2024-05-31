@@ -55,9 +55,10 @@ async def connect_to_wss(user_id):
                             await asyncio.sleep(20)
                     except Exception as e:
                         logger.error(e)
+                        return
 
                 await asyncio.sleep(1)
-                asyncio.create_task(send_ping())
+                task = asyncio.create_task(send_ping())
 
                 while True:
                     response = await websocket.recv()
@@ -85,6 +86,7 @@ async def connect_to_wss(user_id):
                         await websocket.send(json.dumps(pong_response))
         except Exception as e:
             logger.error(e)
+            task.cancel()
 
 
 async def main():
